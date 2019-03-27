@@ -150,13 +150,12 @@ endfunction
 
 function! buftabline#update(zombie)
 	set tabline=
+	if tabpagenr('$') > 1 | set guioptions+=e showtabline=2 | return | endif
 	set guioptions-=e
 	if 0 == g:buftabline_show
-		set showtabline=0
+		set showtabline=1
 		return
-	endif
-	if tabpagenr('$') > 1 | set guioptions+=e showtabline=2 | return | endif
-	if 1 == g:buftabline_show
+	elseif 1 == g:buftabline_show
 		" account for BufDelete triggering before buffer is actually deleted
 		let bufnums = filter(buftabline#user_buffers(), 'v:val != a:zombie')
 		let &g:showtabline = 1 + ( len(bufnums) > 1 )
